@@ -2,4 +2,8 @@ Meeting notes 4/4/24
 - Project concept: cost of travel between FCC and the on-ramp of I-270
 - FCC is a single entrance, I-270 is a single exit
 - many alternate routes with different distances, traffic distributions,
-- 
+- Delegated tasks:
+  - Minh: queueing system, multiqueue implementation; road lane simulation
+  - Michael: navigation; real-world representation & data
+  - Dean: clock; event system(?)
+  - Marshal: dijkstra's algorithm demo, + contained implementation
