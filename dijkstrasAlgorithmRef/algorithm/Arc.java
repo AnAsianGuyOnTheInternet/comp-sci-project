@@ -9,13 +9,15 @@ public class Arc {
         reject
     };
     private set set;
+    private double weight;
     private Node source;
     private Node destination;
 
-    public Arc(Node source, Node destination) {
+    public Arc(Node source, Node destination, double weight) {
         this.set = set.unknown;
         this.source = source;
         this.destination = destination;
+        this.weight = weight;
     }
 
     public String toString() {
