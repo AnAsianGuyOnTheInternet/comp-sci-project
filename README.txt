@@ -12,3 +12,7 @@ Meeting notes 4/4/24
 4/10/24
 -create base simulation that can be tweaked with buses, hov, tolls & think of other means of improving travel time
 -create individual test classes to test functionality of code snippets
+
+4/17/24
+-track passenger destinations for comparing bus routes vs car
+-consider alternative solutions to reducing traffic
