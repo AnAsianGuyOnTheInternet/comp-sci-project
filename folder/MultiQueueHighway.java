@@ -32,7 +32,7 @@ public class MultiQueueHighway {
             Car car1 = lane1.peek();
             Car car2 = lane2.peek();
 
-            if (car1.getNavTime() < car2.getNavTime()) {
+            if (car1.getNavigationTime() < car2.getNavigationTime()) {
                 return lane1.poll();
             } else {
                 return lane2.poll();
