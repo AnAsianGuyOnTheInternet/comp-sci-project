@@ -1,1 +1,1 @@
-previous assignment files for reference in final project
+Incomplete or old files for use as references

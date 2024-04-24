@@ -5,6 +5,8 @@ CMIS202
 Queue.java
 Create basic queue 
 */
+package demo;
+
 public class Queue {
 	private QueueRecord head, tail;
 	//empty queue constructor
