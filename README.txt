@@ -2,6 +2,8 @@ Meeting notes
 4/24/24
 -get fully functional project to prepare for presentation
 -people score
+-establish span of simulation in terms of nodes/locations, add real data to replace placeholders
+-copy constructor
 
 4/17/24
 -track passenger destinations for comparing bus routes vs car
