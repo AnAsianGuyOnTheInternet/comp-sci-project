@@ -58,6 +58,44 @@ public class Map {
         this.arcList.add(new Arc(sourceNode, destinationNode, distance));
         return true;
     }
+    /** 
+     * Finds shortest path from entrance to exit based on existing arcs.
+     * Will return null if entrance or exit do not exist. 
+     * Will return an empty Arc[] if no possible path exists.
+     */
+    public Arc[] solve(String entrance, String exit) {
+        Node entranceNode = this.findNodeFromName(entrance);
+        Node exitNode = this.findNodeFromName(exit);
+        if (entranceNode == null || exitNode == null)
+            return null;
+
+        entranceNode.setSet('A');
+        for (Arc arc : getConnections(entranceNode)) {
+            arc.setSet('B');
+            if (arc.getToNode(entranceNode).isSet('B')) {
+                
+            }
+        }
+
+    }
+
+    private Arc[] getConnections(Node fromNode) {
+        int connections = 0;
+        for (int i = 0; i < arcList.size(); i++) {
+            if (arcList.get(i).isConnecting(fromNode))
+                connections++;
+        }
+        Arc[] result = new Arc[connections];
+        int resultCount = 0;
+        Arc fromArc;
+        for (int i = 0; i < arcList.size(); i++) {
+            fromArc = arcList.get(i);
+            if (fromArc.isConnecting(fromNode))
+                result[resultCount++] = fromArc;
+        }
+
+        return result;
+    }
     
     private Node findNodeFromName(String name) {
         for (Node node : this.nodeList) {
