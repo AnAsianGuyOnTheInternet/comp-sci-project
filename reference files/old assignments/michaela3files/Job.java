@@ -5,6 +5,8 @@ CMIS202
 Job.java
 Job class for holding customer data.
 */
+package michaela3files;
+
 public class Job {
 
 	private static int idTotal = 0;

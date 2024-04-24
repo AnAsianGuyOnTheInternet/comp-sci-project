@@ -1,0 +1,7 @@
+Main file: SimulationTest.java
+System simulated: Buffet-style restaurant.
+Customer enters restaurant, represented by queues[0]
+Customer can freely access various food stations such as Appetizers, Proteins, Sides, Salad Bar, Dessert, represented by queues[1] through queues[5]. 
+Customer is free to repeatedly access the same station as they may want to pick multiple items. 
+Customer must have picked at least one item in order to move to queue[6] for checkout.
+Once customer checks out, their data is harvested into the completedJobs queue for further processing.
