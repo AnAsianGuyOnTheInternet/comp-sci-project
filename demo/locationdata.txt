@@ -1,0 +1,40 @@
+/*
+Might be more optimal as .csv
+format: exit/road/intersection, distance to next, speed limit, daily traffic, other
+*/
+**BEGINPARSE**
+Cunningham Falls Park Rd,               1.3 mi, 55, 32331
+(Southbound only) Catoctin Hollow Rd,   0.7 mi, 55, 1163
+Auburn Rd / Catoctin Furnace Rd,        1.9 mi, 55
+Auburn Rd / Angleberger Rd,             0.5 mi, 55, 35201
+Fish Hatchery Rd,                       0.3 mi, 55
+Powell Rd,                              0.7 mi, 55
+Stull Rd,                               0.6 mi, 55 
+Hansonville Rd / Hessong Bridge Rd,     0.8 mi, 55
+Devilbliss Bridge Rd,                   0.4 mi, 55
+Old Frederick Rd,                       0.6 mi, 55
+Hansonville Rd,                         0.5 mi, 55
+Farm Ln / Sundays Ln,                   0.3 mi, 55
+Biggs Ford Rd,                          0.9 mi, 50
+Willow Rd,                              0.6 mi, 50
+18 Christopher Xing / Monocacy Blvd,    1.2 mi, 55, 43471
+17 Liberty Rd,                          0.7 mi, 55, 44830
+16 Opposssumtown Pike/Motter Ave,       0.7 mi, 55, 80251
+15 W 7th St,                            0.5 mi, 55, 91760
+14 Rosemont Ave,                        0.8 mi, 55, 95501
+13 W Patrick St,                        0.8 mi, 55, 101630
+12 S Jefferson St,                      0.4 mi, 50, 92490
+11 Jefferson Pk / Ballenger Creek Pk,   0.4 mi, 50, 55431
+10 South I-70 exit 52B                  0.6 mi, 55, 57281
+09 Jefferson Tech Way                   1.7 mi, 65, 52801
+Mt. Zion Rd                             1.8 mi, 65
+Merge 340                               0.0 mi, 65, 35803
+**ENDPARSE**
+/*
+Worth considering:
+
+North of I-70 exit 52                   ?.? mi, 33853
+I-70 West of 15                         ?.? mi, 77751
+I-70 East of 15                         ?.? mi, 91483
+I-70 East of 270                        ?.? mi, 103851
+*/
