@@ -25,10 +25,10 @@ Willow Rd,                              0.6 mi, 50
 13 W Patrick St,                        0.8 mi, 55, 101630
 12 S Jefferson St,                      0.4 mi, 50, 92490
 11 Jefferson Pk / Ballenger Creek Pk,   0.4 mi, 50, 55431
-10 South I-70 exit 52B                  0.6 mi, 55, 57281
-09 Jefferson Tech Way                   1.7 mi, 65, 52801
-Mt. Zion Rd                             1.8 mi, 65
-Merge 340                               0.0 mi, 65, 35803
+10 South I-70 exit 52B,                 0.6 mi, 55, 57281
+09 Jefferson Tech Way,                  1.7 mi, 65, 52801
+Mt. Zion Rd,                            1.8 mi, 65
+Merge 340,                              0.0 mi, 65, 35803
 **ENDPARSE**
 /*
 Worth considering:
