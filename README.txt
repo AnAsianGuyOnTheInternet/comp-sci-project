@@ -1,4 +1,8 @@
 Meeting notes 
+
+5/1/24
+Presentation: https://docs.google.com/presentation/d/1Xj4dED12Id5wxiXel1J7MW3sAC1ZVZ355ridwU5O560/edit?usp=sharing
+
 4/24/24
 -get fully functional project to prepare for presentation
 -people score
