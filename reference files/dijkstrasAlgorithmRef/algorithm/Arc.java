@@ -26,6 +26,18 @@ public class Arc {
         else
         return false;
     }
+    public boolean isSet(char setChar) {
+        if (setChar == 'A' && this.set == set.shortest)
+            return true;
+        if (setChar == 'B' && this.set == set.known)
+            return true;
+        if (setChar == 'C' && this.set == set.unknown)
+            return true;
+        if (setChar == 'D' && this.set == set.reject)
+            return true;
+        else
+            return false;
+    }
 
     /**
      * A - shortest known path, connects nodes in A
@@ -52,6 +64,9 @@ public class Arc {
             return this.source;
         else
             return null;
+    }
+    public double getWeight() {
+        return this.weight;
     }
 
     public String toString() {

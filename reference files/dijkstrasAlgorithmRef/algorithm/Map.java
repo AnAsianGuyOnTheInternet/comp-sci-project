@@ -69,14 +69,48 @@ public class Map {
         if (entranceNode == null || exitNode == null)
             return null;
 
-        entranceNode.setSet('A');
-        for (Arc arc : getConnections(entranceNode)) {
-            arc.setSet('B');
-            if (arc.getToNode(entranceNode).isSet('B')) {
-                
+        Arc[] results = new Arc[this.arcList.size()]
+        solveStep(entranceNode, exitNode, results);
+
+        for (Node node : this.nodeList) {
+            if (node.isSet('B')) {
+                boolean areAllB = true;
+                for (Arc arc : getConnections(node)) {
+                    if (arc.isSet('C')) {
+                        areAllB = false;
+                    }
+                }
+
+                if (areAllB) {
+                    if (node.equals(exitNode))
+                        return results;
+                    else
+                        node.setSet('A');
+                        solveStep(node, exitNode, resultList);
+                }
             }
         }
+    }
 
+    private Arc[] solveStep(Node entranceNode, Node exitNode, Arc[] results) {
+        entranceNode.setSet('A');
+
+        for (Arc arc : getConnections(entranceNode)) {
+            arc.setSet('B');
+            Node toNode = arc.getToNode(entranceNode);
+            if (toNode.isSet('B')) {
+                if (entranceNode.getShortestPathLength() + arc.getWeight() < toNode.getShortestPathLength()) {
+                    toNode.getLastArcInPath().setSet('D');
+                    toNode.setLastArcInPath(arc);
+                    toNode.setShortestPathLength(entranceNode.getShortestPathLength() + arc.getWeight());
+                }
+            }
+            else if (toNode.isSet('C')) {
+                toNode.setSet('B');
+                toNode.setLastArcInPath(arc);
+                toNode.setShortestPathLength(entranceNode.getShortestPathLength() + arc.getWeight());
+            }
+        }
     }
 
     private Arc[] getConnections(Node fromNode) {
