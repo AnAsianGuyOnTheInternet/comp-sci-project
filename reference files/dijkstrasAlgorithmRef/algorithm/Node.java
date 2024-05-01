@@ -12,6 +12,8 @@ public class Node {
         unknown
     };
     private set set;
+    private double shortestPathLength;
+    private Arc lastArcInPath;
 
     public Node() {
         this.name = "Default";
@@ -27,6 +29,12 @@ public class Node {
     public String getName() {
         return this.name;
     }
+    public double getShortestPathLength() {
+        return this.shortestPathLength;
+    }
+    public Arc getLastArcInPath() {
+        return this.lastArcInPath;
+    }
     /**
      * A - Shortest known path
      * B - Known path
@@ -40,6 +48,12 @@ public class Node {
             this.set = set.known;
         else
             this.set = set.unknown;
+    }
+    public void setLastArcInPath(Arc lastArc) {
+        this.lastArcInPath = lastArc;
+    }
+    public void setShortestPathLength(double length) {
+        this.shortestPathLength = length;
     }
     /**
      * A - Shortest known path
