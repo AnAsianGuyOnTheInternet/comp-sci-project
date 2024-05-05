@@ -33,14 +33,16 @@ class Route {
     private final Node destination;
     private final int distance;
     private final int speedLimit;
-    private final List<Job> jobsToDestination; // List to store jobs to destination
+    private final List<Job> northboundJobs; // List to store jobs for northbound traffic
+    private final List<Job> southboundJobs; // List to store jobs for southbound traffic
 
     public Route(Node source, Node destination, int distance, int speed) {
         this.source = source;
         this.destination = destination;
         this.distance = distance;
         this.speedLimit = speed;
-        this.jobsToDestination = new ArrayList<>(); // Initialize the list
+        this.northboundJobs = new ArrayList<>(); // Initialize the list for northbound traffic
+        this.southboundJobs = new ArrayList<>(); // Initialize the list for southbound traffic
     }
 
     public Node getSource() {
@@ -59,134 +61,115 @@ class Route {
         return speedLimit;
     }
 
-    public void addJobToDestination(Job job, double startTime) {
+    public void addNorthboundJob(Job job, double startTime) {
         job.setArrival(startTime); // Set the arrival time for the job
-        jobsToDestination.add(job); // Add the job to the list
+        northboundJobs.add(job); // Add the job to the northbound traffic list
+    }
+
+    public void addSouthboundJob(Job job, double startTime) {
+        job.setArrival(startTime); // Set the arrival time for the job
+        southboundJobs.add(job); // Add the job to the southbound traffic list
     }
 }
 
 
-public class RoadGridModel {
+class RoadGridModel {
     private List<Node> nodes;
     private ExponentialDistribution exponentialDistribution;
     private Random random;
+    private Map<Route, SingleServerQueue> routeTraffic;
+    private double lambda;  // Define lambda as a class field
 
     public RoadGridModel(double lambda, String filePath) {
+        this.lambda = lambda;  // Initialize lambda
         this.nodes = new ArrayList<>();
         this.exponentialDistribution = new ExponentialDistribution(lambda);
         this.random = new Random();
-        initializeNodesAndRoutes(filePath);
+        this.routeTraffic = new HashMap<>();
+        initializeNodesAndRoutes(filePath);  // No need to pass lambda here
     }
 
     private void initializeNodesAndRoutes(String filePath) {
         LocationParser parser = new LocationParser(filePath);
         List<LocationParser.RoadSegment> roadSegments = parser.loadRoadSegments();
         Map<String, Node> nodeMap = new HashMap<>();
-
-        Node previousNode = null; // Properly declare and initialize previousNode.
+        Node previousNode = null;
 
         for (LocationParser.RoadSegment segment : roadSegments) {
-            // Ensure each node is only created once and reused if referenced multiple times.
             Node currentNode = nodeMap.computeIfAbsent(segment.roadName, Node::new);
-
-            // If there is a previous node, create a route from it to the current node.
             if (previousNode != null) {
                 Route route = new Route(previousNode, currentNode, (int) segment.distance, segment.speedLimit);
-                previousNode.addRoute(route); // Add the route to the previous node's route list.
+                Route reverseRoute = new Route(currentNode, previousNode, (int) segment.distance, segment.speedLimit);
+                previousNode.addRoute(route);
+                currentNode.addRoute(reverseRoute);
+                routeTraffic.put(route, new SingleServerQueue(this.lambda)); // Use this.lambda
+                routeTraffic.put(reverseRoute, new SingleServerQueue(this.lambda));
             }
-
-            // Update previousNode to be the current node for the next iteration.
             previousNode = currentNode;
         }
-
         nodes.addAll(nodeMap.values());
-
-        // Add logging to track progress
         System.out.println("Nodes and routes initialized successfully.");
     }
 
-    
-    public void simulateTraffic(int numCars, int numBuses, double startTime) {
-        double currentTime = startTime;
-    
-        // Check if nodes list is not empty
-        if (nodes.isEmpty()) {
-            System.out.println("No nodes available for traffic simulation.");
-            return;
-        }
-    
+    public void simulateTraffic(int numCars, double startTime) {
         for (int i = 0; i < numCars; i++) {
-            int startIndex = random.nextInt(nodes.size());
-            Node startNode = nodes.get(startIndex);
-    
-            if (startNode.getRoutes().isEmpty()) {
-                System.out.println("No routes available from " + startNode.getName());
-                continue; // Skip to the next vehicle if no routes are available from this node
+            Node source = selectNode(); // Custom method to select source node
+            Node destination = selectNode(); // Custom method to select destination node
+            if (source.equals(destination)) continue; // Skip if source and destination are the same
+
+            List<Route> routePlan = findRoute(source, destination); // Find route from source to destination
+            if (routePlan == null || routePlan.isEmpty()) {
+                System.out.println("No valid route found from " + source.getName() + " to " + destination.getName());
+                continue;
             }
-    
-            Route route = startNode.getRoutes().get(random.nextInt(startNode.getRoutes().size()));
-            if (route.getDestination() == null) {
-                System.out.println("Invalid route from " + startNode.getName() + ". Skipping this route.");
-                continue; // Skip this route if destination node is null
-            }
-    
-            double jobStartTime = currentTime + exponentialDistribution.sample(); // vehicles arrive over time
-    
-            Car newCar = new Car(startNode.getName(), route.getDestination().getName(), jobStartTime);
-            route.addJobToDestination(newCar, jobStartTime); // Safely add vehicles only in the valid direction
-            System.out.println("Car " + newCar.getID() + " added to route from " + route.getSource().getName() +
-                                " to " + route.getDestination().getName() + " at " + jobStartTime);
-    
-            // Additional checks for route attributes
-            if (route.getDistance() != 0 && route.getSpeedLimit() != 0) {
-                double travelTime = route.getDistance() / (double) route.getSpeedLimit();
-                newCar.setCompletion(jobStartTime + travelTime);
-            } else {
-                System.out.println("Invalid route attributes for car " + newCar.getID() + ". Skipping this route.");
-            }
-    
-            currentTime = jobStartTime; // Advance time as vehicles arrive
-        }
-    
-        for (int i = 0; i < numBuses; i++) {
-            int startIndex = random.nextInt(nodes.size());
-            Node startNode = nodes.get(startIndex);
-    
-            if (startNode.getRoutes().isEmpty()) {
-                System.out.println("No routes available from " + startNode.getName() + " for the bus.");
-                continue; // Skip to the next bus if no routes are available from this node
-            }
-    
-            Route route = startNode.getRoutes().get(random.nextInt(startNode.getRoutes().size()));
-            if (route.getDestination() == null) {
-                System.out.println("Invalid route from " + startNode.getName() + " for the bus. Skipping this route.");
-                continue; // Skip this route if destination node is null
-            }
-    
-            double jobStartTime = currentTime + exponentialDistribution.sample(); // buses arrive over time
-    
-            Bus newBus = new Bus(startNode.getName(), route.getDestination().getName(), jobStartTime);
-            route.addJobToDestination(newBus, jobStartTime); // Safely add buses only in the valid direction
-            System.out.println("Bus " + newBus.getID() + " added to route from " + route.getSource().getName() +
-                                " to " + route.getDestination().getName() + " at " + jobStartTime);
-    
-            // Additional checks for route attributes
-            if (route.getDistance() != 0 && route.getSpeedLimit() != 0) {
-                double travelTime = route.getDistance() / (double) route.getSpeedLimit();
-                newBus.setCompletion(jobStartTime + travelTime);
-            } else {
-                System.out.println("Invalid route attributes for bus " + newBus.getID() + ". Skipping this route.");
-            }
-    
-            currentTime = jobStartTime; // Advance time as buses arrive
+
+            double arrivalTime = startTime + exponentialDistribution.sample();
+            Car newCar = new Car(source.getName(), destination.getName(), arrivalTime);
+            routePlan.forEach(route -> routeTraffic.get(route).add(newCar, arrivalTime)); // Manage cars in queues
+
+            System.out.println("Car " + newCar.getID() + " will travel from " + source.getName() +
+                                " to " + destination.getName() + " starting at " + arrivalTime);
         }
     }
+
+    private Node selectNode() {
+        return nodes.get(random.nextInt(nodes.size()));
+    }
+
+    private List<Route> findRoute(Node source, Node destination) {
+        List<Route> path = new ArrayList<>();
+        Node current = source;
     
+        while (current != null && !current.equals(destination)) {
+            // Assuming there's always one route from each node in the direction of the destination
+            if (current.getRoutes().isEmpty()) {
+                return new ArrayList<>(); // No route available from current node
+            }
+    
+            Route nextRoute = current.getRoutes().get(0); // Get the first (and supposedly only) route
+            if (nextRoute.getDestination().equals(destination)) {
+                path.add(nextRoute);
+                break; // Reached the destination
+            } else if (nextRoute.getDestination().equals(source)) {
+                return new ArrayList<>(); // Avoid looping back to the source
+            } else {
+                path.add(nextRoute); // Add the route to the path and move to the next node
+                current = nextRoute.getDestination();
+            }
+        }
+    
+        if (!path.isEmpty() && path.get(path.size() - 1).getDestination().equals(destination)) {
+            return path; // Successfully found a route to the destination
+        }
+    
+        return new ArrayList<>(); // Return an empty list if no valid path is found
+    }
+
     public static void main(String[] args) {
         double lambda = 0.1; // Rate of vehicle arrivals
-        String filePath = "demo\\locationdata.txt"; 
-    
+        String filePath = "demo\\locationdata.txt";
+
         RoadGridModel roadGridModel = new RoadGridModel(lambda, filePath);
-        roadGridModel.simulateTraffic(900, 5, 0);
+        roadGridModel.simulateTraffic(900, 0);
     }
 }
