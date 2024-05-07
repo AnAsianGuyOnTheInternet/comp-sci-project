@@ -29,7 +29,8 @@ Presentation: https://docs.google.com/presentation/d/1Xj4dED12Id5wxiXel1J7MW3sAC
 
 5/6/24
 Presentation Notes:
-- Add link to the information source
+- Navigation System
+  - Add link to the information source
   - Enlarge diagram and make it more coherent (less specific detail)
 - Clock
   - First bullet wording
