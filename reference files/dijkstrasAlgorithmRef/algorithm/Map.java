@@ -63,20 +63,20 @@ public class Map {
      * Will return null if entrance or exit do not exist. 
      * Will return an empty Arc[] if no possible path exists.
      */
-    public Arc[] solve(String entrance, String exit) {
+    public ArrayList solve(String entrance, String exit) {
         Node entranceNode = this.findNodeFromName(entrance);
         Node exitNode = this.findNodeFromName(exit);
         if (entranceNode == null || exitNode == null)
             return null;
 
-        Arc[] results = new Arc[this.arcList.size()]
+        ArrayList<Arc> results = new ArrayList<>();
         solveStep(entranceNode, exitNode, results);
 
         for (Node node : this.nodeList) {
             if (node.isSet('B')) {
                 boolean areAllB = true;
                 for (Arc arc : getConnections(node)) {
-                    if (arc.isSet('C')) {
+                    if (!arc.isSet('B')) {
                         areAllB = false;
                     }
                 }
@@ -86,13 +86,15 @@ public class Map {
                         return results;
                     else
                         node.setSet('A');
-                        solveStep(node, exitNode, resultList);
+                        results = solveStep(node, exitNode, results);
                 }
             }
         }
+
+        return new ArrayList<>();
     }
 
-    private Arc[] solveStep(Node entranceNode, Node exitNode, Arc[] results) {
+    private ArrayList solveStep(Node entranceNode, Node exitNode, ArrayList results) {
         entranceNode.setSet('A');
 
         for (Arc arc : getConnections(entranceNode)) {
@@ -111,6 +113,8 @@ public class Map {
                 toNode.setShortestPathLength(entranceNode.getShortestPathLength() + arc.getWeight());
             }
         }
+
+        return new ArrayList<>();
     }
 
     private Arc[] getConnections(Node fromNode) {
