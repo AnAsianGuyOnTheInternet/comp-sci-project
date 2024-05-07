@@ -26,3 +26,27 @@ Presentation: https://docs.google.com/presentation/d/1Xj4dED12Id5wxiXel1J7MW3sAC
   - Michael: navigation; real-world representation & data
   - Dean: clock; event system(?)
   - Marshal: dijkstra's algorithm demo, + contained implementation
+
+5/6/24
+Presentation Notes:
+- Add link to the information source
+  - Enlarge diagram and make it more coherent (less specific detail)
+- Clock
+  - First bullet wording
+    - Measures time for each car
+  - Add simple diagram of queues
+- Event Setter
+  - Timeline diagram
+  - Add actual text
+- Results
+  - Examples of runs for busses of varying amounts vs. no busses
+  - Graph of Time Traveled to # of Busses
+- Improvements
+  - Clarify about variables our simulation can't account for
+- Summary
+  - Create summary slide
+  - What we learned
+  - What the data showed
+  - "Questions?"
+- Overall
+  - Increase text size
