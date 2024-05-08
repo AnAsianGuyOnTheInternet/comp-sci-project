@@ -77,6 +77,7 @@ class RoadGridModel {
     private Random random;
     private Map<Route, SingleServerQueue> routeTraffic;
     private double lambda;  // Define lambda as a class field
+    private Clock clock = new Clock();
 
     public RoadGridModel(double lambda, String filePath) {
         this.lambda = lambda;  // Initialize lambda
@@ -110,6 +111,8 @@ class RoadGridModel {
     }
 
     public void simulationStep(int numCars, double startTime) {
+        this.clock.setTime(startTime);
+
         for (int i = 0; i < numCars; i++) {
             Node source = selectNode(); // Custom method to select source node
             Node destination = selectNode(); // Custom method to select destination node
@@ -121,12 +124,19 @@ class RoadGridModel {
                 continue;
             }
 
-            double arrivalTime = startTime + exponentialDistribution.sample();
+            double arrivalTime = clock.getTime() + exponentialDistribution.sample();
+            double completionTime = 0;
             Car newCar = new Car(source.getName(), destination.getName(), arrivalTime);
-            routePlan.forEach(route -> routeTraffic.get(route).add(newCar, arrivalTime)); // Manage cars in queues
+            routePlan.forEach(route -> routeTraffic.get(route).add(newCar, arrivalTime));
+            for (Route route : routePlan) {
+                routeTraffic.get(route).add(newCar, arrivalTime);
+                completionTime += route.getDistance() * (route.getSpeedLimit() / 60); // gets minutes required to travel
+            } // Manage cars in queues, determine completion times
+            this.clock.addEntranceEvent(newCar, arrivalTime, completionTime);
 
             System.out.println("Car " + newCar.getID() + " will travel from " + source.getName() +
                                 " to " + destination.getName() + " starting at " + arrivalTime);
+    
         }
     }
 
