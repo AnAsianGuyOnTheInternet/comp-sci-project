@@ -109,7 +109,7 @@ class RoadGridModel {
         System.out.println("Nodes and routes initialized successfully.");
     }
 
-    public void simulateTraffic(int numCars, double startTime) {
+    public void simulationStep(int numCars, double startTime) {
         for (int i = 0; i < numCars; i++) {
             Node source = selectNode(); // Custom method to select source node
             Node destination = selectNode(); // Custom method to select destination node
