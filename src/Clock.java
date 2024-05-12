@@ -6,11 +6,14 @@ public class Clock {
     private double currentTime;
     private final List<Queue> queueList;
     private List<Job> activeCars;
+    private int completedCars;
+    private StringBuffer infoBuffer;
 
     public Clock() {
         currentTime = 0.0;
         queueList = new LinkedList<>();
         this.activeCars = new LinkedList<Job>();
+        this.infoBuffer = new StringBuffer();
     }
 
     public Clock(Queue[] q) {
@@ -26,14 +29,28 @@ public class Clock {
         this.update();
     }
     public void update() {
+        Integer nextInLineIndex = null;
+        double tCompletion;
+        double lastSmallestCompletion = Integer.MAX_VALUE;
         for (int i = 0 ; i < activeCars.size(); i++) {
-            if (currentTime > activeCars.get(i).getCompletion()) {
-                // TODO
-                // add methods to return useful data about the cars trip
-                // i.e. completion time - arrival time, delays from queue length..
-
-                this.activeCars.remove(i);
+            tCompletion = activeCars.get(i).getCompletion();
+            if (tCompletion < lastSmallestCompletion)
+                lastSmallestCompletion = tCompletion;
+            if (currentTime > tCompletion && tCompletion <= lastSmallestCompletion) {
+                nextInLineIndex = i;
             }
+        }
+        if (nextInLineIndex == null)
+            currentTime = lastSmallestCompletion;
+        else {
+            int carToRemoveIndex = nextInLineIndex;
+            ++this.completedCars;
+            this.infoBuffer.append("Car " 
+                + this.activeCars.get(carToRemoveIndex).getID() + ": "
+                + this.activeCars.get(carToRemoveIndex).getTimeSpent() + "\n");
+            this.infoBuffer.append("Total time per car so far: " + (currentTime / this.completedCars) + "\n");
+
+            this.activeCars.remove(carToRemoveIndex);
         }
     }
 
@@ -60,5 +77,15 @@ public class Clock {
     }
     public double getTime() {
         return this.currentTime;
+    }
+
+    public boolean hasActive() {
+        if (activeCars.size() > 0)
+            return true;
+        return false;
+    }
+
+    public StringBuffer reportResults() {
+        return this.infoBuffer;
     }
 }

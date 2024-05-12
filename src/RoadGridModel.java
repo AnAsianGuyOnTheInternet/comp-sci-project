@@ -110,7 +110,7 @@ class RoadGridModel {
         System.out.println("Nodes and routes initialized successfully.");
     }
 
-    public void simulationStep(int numCars, double startTime) {
+    public String simulationStep(int numCars, double startTime) {
         this.clock.setTime(startTime);
 
         for (int i = 0; i < numCars; i++) {
@@ -138,6 +138,12 @@ class RoadGridModel {
                                 " to " + destination.getName() + " starting at " + arrivalTime);
     
         }
+
+        do {
+            this.clock.update();
+        } while (this.clock.hasActive());
+
+        return this.clock.reportResults().toString();
     }
 
     private Node selectNode() {

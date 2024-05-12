@@ -6,6 +6,6 @@ public class Driver {
      * First simulation, 100 cars
      */
 
-     roadGrid.simulationStep(100, 0);
+     System.out.println(roadGrid.simulationStep(100, 0));
   }
 }

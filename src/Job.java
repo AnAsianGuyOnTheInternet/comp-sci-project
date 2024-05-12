@@ -30,11 +30,17 @@ abstract class Job {
         return jobComplete;
     }
 
+    double getTimeSpent() {
+        return this.jobComplete - this.jobArrive; 
+    }
+
     public int getID() {
         return id;
     }
 
-    // Initial arrival into the system
+    /** 
+     * Initial arrival into the system IN MASTER CLOCK TIME
+     */ 
     public double getFirstArrival() {
         return firstArrival;
     }
@@ -64,6 +70,7 @@ class Car extends Job {
     public String getDestination() {
         return destination;
     }
+    
 }
 
 class Bus extends Job {
