@@ -47,7 +47,8 @@ public class Clock {
             ++this.completedCars;
             this.infoBuffer.append("Car " 
                 + this.activeCars.get(carToRemoveIndex).getID() + ": "
-                + this.activeCars.get(carToRemoveIndex).getTimeSpent() + "\n");
+                + (this.activeCars.get(carToRemoveIndex).getArrival() - this.activeCars.get(carToRemoveIndex).getCompletion()) 
+                + "\n");
             this.infoBuffer.append("Total time per car so far: " + (currentTime / this.completedCars) + "\n");
 
             this.activeCars.remove(carToRemoveIndex);

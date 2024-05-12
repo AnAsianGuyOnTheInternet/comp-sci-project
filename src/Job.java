@@ -30,9 +30,11 @@ abstract class Job {
         return jobComplete;
     }
 
+    /*
     double getTimeSpent() {
-        return this.jobComplete - this.jobArrive; 
+        return jobComplete - jobArrive; 
     }
+    */
 
     public int getID() {
         return id;
